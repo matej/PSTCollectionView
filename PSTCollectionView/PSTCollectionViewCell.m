@@ -53,10 +53,9 @@
 - (void)applyLayoutAttributes:(PSTCollectionViewLayoutAttributes *)layoutAttributes {
     if (layoutAttributes != _layoutAttributes) {
         _layoutAttributes = layoutAttributes;
-//        self.frame = layoutAttributes.frame;
 
-        self.layer.frame = layoutAttributes.frame;
-        self.layer.position = layoutAttributes.center;
+        self.frame = layoutAttributes.frame;
+        self.center = layoutAttributes.center;
 
         self.hidden = layoutAttributes.isHidden;
         self.layer.transform = layoutAttributes.transform3D;
@@ -116,6 +115,26 @@
         _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_contentView];
 
+        _menuGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(menuGesture:)];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder])) {
+        if ([[self subviews] count] > 0) {
+            _contentView = [self subviews][0];
+        } else {
+            _contentView = [[UIView alloc] initWithFrame:self.bounds];
+            _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+            [self addSubview:_contentView];
+        }
+        
+        _backgroundView = [[UIView alloc] initWithFrame:self.bounds];
+        _backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self insertSubview:_backgroundView belowSubview:_contentView];
+        
         _menuGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(menuGesture:)];
     }
     return self;
